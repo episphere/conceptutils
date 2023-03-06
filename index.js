@@ -36,14 +36,21 @@ async function conceptViz(id){
     let subCol=cj.subcollections
     if(subCol){
         delete cji.subcollections
+        let h = ''
         subCol.forEach(id=>{
             id = id.replace('.json','')
-            childrenDiv.innerHTML+=`[${id}]`
+            h+=`[<a href="#"  onmouseover="conceptVizSub(${id})">${id}</a>]`
+            //childrenDiv.innerHTML+=`[${id}]`
         })
+        childrenDiv.innerHTML=h
     }
     conceptVizPre.innerHTML=JSON.stringify(cji,null,3)
     
     //console.log(await getConcept(id))
+}
+
+async function conceptVizSub(id){
+    conceptVizPre.textContent=JSON.stringify(await getConcept(id),null,3)
 }
 
 function viewURL(id=119643471){
