@@ -41,6 +41,7 @@ async function conceptViz(id){
             id = id.replace('.json','')
             h+=`[<a href="#"  onmouseover="conceptVizSub(${id})">${id}</a>]`
             //childrenDiv.innerHTML+=`[${id}]`
+            //document.querySelector('pre').innerHTML=JSON.stringify(x,null,3).replace(/(\w+)\.json/g,'<a href="#" onmouseover="conceptVizSub($1)">$1.json</a>')
         })
         childrenDiv.innerHTML=h
     }
