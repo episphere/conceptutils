@@ -5,6 +5,7 @@ let conceptCache={}
 
 const buttons=[
     'root concepts',
+    'tabulate',
     'dependency map',
 ]
 
@@ -73,8 +74,30 @@ async function getConcept(id=119643471){
 }
 
 fun.dependency_map=function(){
-    console.log(Date())
+    resultsDiv.innerHTML=`Under development<br>${Date()}`
 }
+
+fun.tabulate=function(){
+    // root concept 129084652
+    // create table
+    resultsDiv.innerHTML=`
+    <table>
+        <tr><td id="head1" style="vertical-align=top">[129084652]</td><td style="vertical-align=top" id="head2">...</td></tr>
+        <tr><td id="body1" style="vertical-align=top">...</td><td style="vertical-align=top" id="body2">...</td></tr>
+    </table>
+    `
+    tabulateFun();
+};
+
+function tabulateFun(){
+    head1.innerHTML=head1.innerHTML.replace(/\[(\w+)\]/g,'[<a href="#" onmouseover="body1.innerHTML=vizHead1($1)">$1</a>]')
+}
+
+async function vizHead1(id){
+    body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)}</pre>`
+}
+
+// .replace(/(\w+)\.json/g,'<a href="#" onmouseover="conceptVizSub($1)">$1.json</a>'
 
 // assemble buttons
 
