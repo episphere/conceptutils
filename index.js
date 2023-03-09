@@ -81,9 +81,9 @@ fun.tabulate=function(){
     // root concept 129084652
     // create table
     resultsDiv.innerHTML=`
-    <table>
-        <tr><td id="head1" style="vertical-align=top">[129084652]</td><td style="vertical-align=top" id="head2">...</td></tr>
-        <tr><td id="body1" style="vertical-align=top">...</td><td style="vertical-align=top" id="body2">...</td></tr>
+    <table style="table-layout:fixed ; width:100% ">
+        <tr><td id="head1" style="vertical-align:top ; overflow:hidden" width="50%">[129084652]</td><td style="vertical-align:top ; overflow:hidden" id="head2" width="50%">...</td></tr>
+        <tr><td id="body1" style="vertical-align:top ; overflow:hidden" width="50%">...</td><td style="vertical-align:top ; overflow:hidden" id="body2" width="50%">...</td></tr>
     </table>
     `
     tabulateFun();
@@ -91,11 +91,35 @@ fun.tabulate=function(){
 
 function tabulateFun(){
     head1.innerHTML=head1.innerHTML.replace(/\[(\w+)\]/g,'[<a href="#" onmouseover="body1.innerHTML=vizHead1($1)">$1</a>]')
+    head2.innerHTML=head2.innerHTML.replace(/\[(\w+)\]/g,'[<a href="#" onmouseover="body2.innerHTML=vizHead2($1)">$1</a>]')
+    body1.innerHTML=body1.innerHTML.replace(/\[(\w+)\]/g,'[<a href="#" onmouseover="body1.innerHTML=vizBody2($1)">$1</a>]')
 }
 
 async function vizHead1(id){
-    body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)}</pre>`
+    body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
+    .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody1($1)">$1.json</a>]')
+    }</pre>`
 }
+
+async function vizHead2(id){
+    body2.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
+    .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody2($1)">$1.json</a>]')
+    }</pre>`
+}
+
+async function vizBody1(id){
+    body2.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
+    .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody2($1)">$1.json</a>]')
+    }</pre>`
+}
+
+async function vizBody2(id){
+    body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
+    .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody1($1)">$1.json</a>]')
+    }</pre>`
+}
+
+
 
 // .replace(/(\w+)\.json/g,'<a href="#" onmouseover="conceptVizSub($1)">$1.json</a>'
 
