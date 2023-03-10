@@ -157,7 +157,7 @@ async function search(q){
     }else{
         //console.log(q.value)
         if(q.value.length>2){
-            let res = aggregateSearch.filter(x=>x.match(q.value)).map(txt=>{
+            let res = aggregateSearch.filter(x=>(x.toLowerCase()).match(q.value.toLowerCase())).map(txt=>{
                 let obj=JSON.parse(txt.match(/^(\w+)(.*)/)[2])
                 obj['conceptId']=txt.match(/^(\w+)(.*)/)[1]
                 return obj
