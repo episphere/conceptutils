@@ -82,7 +82,7 @@ fun.tabulate=function(){
     // create table
     resultsDiv.innerHTML=`
     <table style="table-layout:fixed ; width:100% ">
-        <tr><td id="head1" style="vertical-align:top ; overflow:scroll" width="50%">[129084652] <input size=40 onkeyup="search(this)"></td><td style="vertical-align:top ; overflow:scroll" id="head2" width="50%"><a href="#" target="_blank" style="color:red">YouTube</a></td></tr>
+        <tr><td id="head1" style="vertical-align:top ; overflow:scroll" width="50%">[129084652] <input size=40 onkeyup="search(this)"></td><td style="vertical-align:top ; overflow:scroll" id="head2" width="50%"><a href="https://www.youtube.com/watch?v=jWH_o8yNBZk" target="_blank" style="color:red">YouTube</a> (2 mins)</td></tr>
         <tr><td id="body1" style="vertical-align:top ; overflow:scroll" width="50%">...</td><td style="vertical-align:top ; overflow:scroll" id="body2" width="50%">...</td></tr>
     </table>
     `
