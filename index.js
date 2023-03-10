@@ -82,8 +82,8 @@ fun.tabulate=function(){
     // create table
     resultsDiv.innerHTML=`
     <table style="table-layout:fixed ; width:100% ">
-        <tr><td id="head1" style="vertical-align:top ; overflow:hidden" width="50%">[129084652]</td><td style="vertical-align:top ; overflow:hidden" id="head2" width="50%">...</td></tr>
-        <tr><td id="body1" style="vertical-align:top ; overflow:hidden" width="50%">...</td><td style="vertical-align:top ; overflow:hidden" id="body2" width="50%">...</td></tr>
+        <tr><td id="head1" style="vertical-align:top ; overflow:scroll" width="50%">[129084652] <input size=40 onkeyup="search(this)"></td><td style="vertical-align:top ; overflow:scroll" id="head2" width="50%"><a href="#" target="_blank" style="color:red">YouTube</a></td></tr>
+        <tr><td id="body1" style="vertical-align:top ; overflow:scroll" width="50%">...</td><td style="vertical-align:top ; overflow:scroll" id="body2" width="50%">...</td></tr>
     </table>
     `
     tabulateFun();
@@ -99,26 +99,74 @@ async function vizHead1(id){
     body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
     .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody1($1)">$1.json</a>]')
     }</pre>`
+    vizBody2(id)
 }
 
 async function vizHead2(id){
     body2.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
     .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody2($1)">$1.json</a>]')
     }</pre>`
+    vizBody1(id)
 }
 
 async function vizBody1(id){
     body2.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
     .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody2($1)">$1.json</a>]')
+    .replace(/"conceptId": "(\w+)"/g,'"conceptId": "<a href="#"  onmouseover="vizConcept2($1)" style="color:red;background-color:yellow;font-size:large">$1</a>"')
     }</pre>`
 }
 
 async function vizBody2(id){
     body1.innerHTML=`<pre>${JSON.stringify(await getConcept(id),null,3)
     .replace(/(\w+)\.json/g,'[<a href="#" onmouseover="vizBody1($1)">$1.json</a>]')
+    .replace(/"conceptId": "(\w+)"/g,'"conceptId": "<a href="#"  onmouseover="vizConcept1($1)" style="color:red;background-color:yellow;font-size:large">$1</a>"')
     }</pre>`
 }
 
+async function vizConcept1(id){
+    let url=editURL(id)
+    head1.innerHTML=`[<a href="#" onmouseover="body1.innerHTML=vizHead1(${id})">${id}</a>] [<a href="${url}" target="_blank" style="color:maroon">Edit</a>]`
+}
+
+async function vizConcept2(id){
+    let url=editURL(id)
+    head2.innerHTML=`[<a href="#" onmouseover="body2.innerHTML=vizHead2(${id})">${id}</a>] [<a href="${url}" target="_blank" style="color:maroon">Edit</a>]`
+}
+
+var aggregate=[]
+var aggregateSearch=[]
+
+fetch('https://episphere.github.io/conceptGithubActions/aggregate.json')
+    .then(x=>x.json().then(
+        x=>{
+            aggregate=x
+            aggregateSearch=[]  // text indexing
+            Object.keys(aggregate).forEach(
+                function(k){
+                    aggregateSearch.push(`${k} ${JSON.stringify(aggregate[k])}`)
+                }
+            )
+        }))
+
+async function search(q){
+    if(!aggregate){
+        setTimeout(function(){
+            console.log('awaiting ...', Date())
+            search(q)
+        },3000)
+    }else{
+        //console.log(q.value)
+        if(q.value.length>2){
+            let res = aggregateSearch.filter(x=>x.match(q.value)).map(txt=>{
+                let obj=JSON.parse(txt.match(/^(\w+)(.*)/)[2])
+                obj['conceptId']=txt.match(/^(\w+)(.*)/)[1]
+                return obj
+            })
+            body1.innerHTML=`<pre>${JSON.stringify(res,null,3)}</pre>`
+                .replace(/"conceptId": "(\w+)"/g,'"conceptId": "<a href="#"  onmouseover="vizBody1($1)" style="color:red;background-color:yellow;font-size:large">$1</a>"')
+        }
+    }
+}
 
 
 // .replace(/(\w+)\.json/g,'<a href="#" onmouseover="conceptVizSub($1)">$1.json</a>'
